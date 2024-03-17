@@ -22,6 +22,8 @@ import ImageUpload from "../custom ui/ImageUpload";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import toast from "react-hot-toast";
+import Loader from "../custom ui/Loader";
+import Delete from "../custom ui/Delete";
 
 const formSchema = z.object({
   title: z.string().min(2).max(20),
@@ -29,43 +31,67 @@ const formSchema = z.object({
   image: z.string(),
 });
 
-const CollectionForm = () => {
+interface CollectionFormProps {
+  initialData?: CollectionType | null;
+}
+
+const CollectionForm: React.FC<CollectionFormProps> = ({ initialData }) => {
   const router = useRouter();
-  const [loading, setLoading] = useState(false)
+
+  const [loading, setLoading] = useState(false);
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      title: "",
-      description: "",
-      image: "",
-    },
+    defaultValues: initialData
+      ? initialData
+      : {
+          title: "",
+          description: "",
+          image: "",
+        },
   });
 
   // 2. Define a submit handler.
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    try{
+    try {
       setLoading(true);
-      const res = await fetch('/api/collections', {
-        method: 'POST',
-        body: JSON.stringify(values)
-      })
+      const url = initialData
+        ? `/api/collections/${initialData._id}`
+        : "/api/collections";
+      const res = await fetch(url, {
+        method: "POST",
+        body: JSON.stringify(values),
+      });
 
-      if(res.ok){
+      if (res.ok) {
         setLoading(false);
-        toast.success('Collection created')
-        router.push('/collections')
+        toast.success(`Collections ${initialData ? "updated" : "created"}`);
+        window.location.href = "/collections";
+        router.push("/collections");
       }
-    }catch(err:any){
-      console.log('fetch collections:', err.message)
-      toast.error('Failed to create Collection')
-
+    } catch (err: any) {
+      console.log("fetch collections:", err.message);
+      toast.error("Failed to create Collection");
     }
   };
 
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement> | React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+    }
+  }
+
   return (
     <div className="p-10">
-      <p className="text-heading2-bold">Create Collection</p>
+      {initialData ?
+        <div className="flex items-center justify-between">
+          <p className="text-heading2-bold">Edit Collection</p>
+          <Delete item="collections" id={initialData._id} />
+        </div>
+
+        :<p className="text-heading2-bold">Create Collection</p>
+      }
+      
       <Separator className="bg-grey-1 mt-4 mb-7" />
 
       <Form {...form}>
@@ -77,7 +103,7 @@ const CollectionForm = () => {
               <FormItem>
                 <FormLabel>Title</FormLabel>
                 <FormControl>
-                  <Input placeholder="title" {...field} />
+                  <Input placeholder="title" {...field} onKeyDown={handleKeyPress} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -91,7 +117,7 @@ const CollectionForm = () => {
               <FormItem>
                 <FormLabel>Description</FormLabel>
                 <FormControl>
-                  <Textarea placeholder="description" {...field} rows={6} />
+                  <Textarea placeholder="description" {...field} rows={6} onKeyDown={handleKeyPress}/>
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -115,9 +141,14 @@ const CollectionForm = () => {
             )}
           />
           <div className="flex gap-10">
-            <Button type="submit" className="bg-blue-1 text-white">
-              Submit
-            </Button>
+            {loading ? (
+              <Loader />
+            ) : (
+              <Button type="submit" className="bg-blue-1 text-white">
+                Submit
+              </Button>
+            )}
+
             <Button
               type="button"
               onClick={() => router.push("/collections")}

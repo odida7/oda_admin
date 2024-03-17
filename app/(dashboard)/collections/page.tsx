@@ -11,7 +11,7 @@ import { Separator } from "@/components/ui/separator";
 import Loader from "@/components/custom ui/Loader";
 
 const Collections = () => {
-  const router = useRouter();
+  const router = useRouter();  
 
   const [loading, setLoading] = useState(true);
   const [collections, setCollections] = useState([]);
@@ -29,7 +29,7 @@ const Collections = () => {
     }
   };
 
-  useEffect(() => {
+  useEffect(() => {  
     getCollections();
   }, []);
 
