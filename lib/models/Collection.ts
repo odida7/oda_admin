@@ -8,7 +8,7 @@ const collectionSchema = new mongoose.Schema({
   },
   description: String,
   image: {
-    type: String,
+    type: String,   
     required: true,
   },
   products: [

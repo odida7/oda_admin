@@ -24,7 +24,7 @@ const Collections = () => {
       const data = await res.json();
       setCollections(data);
       setLoading(false);
-    } catch (err) {
+    } catch (err) {   
       console.log("[collections_GET]", err);
     }
   };

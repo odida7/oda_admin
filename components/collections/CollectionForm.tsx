@@ -44,7 +44,7 @@ const CollectionForm: React.FC<CollectionFormProps> = ({ initialData }) => {
     resolver: zodResolver(formSchema),
     defaultValues: initialData
       ? initialData
-      : {
+      : {  
           title: "",
           description: "",
           image: "",

@@ -36,7 +36,7 @@ const formSchema = z.object({
   colors: z.array(z.string()),
   price: z.coerce.number().min(0.1),
   expense: z.coerce.number().min(0.1),
-});   
+});
 
 interface ProductFormProps {
   initialData?: ProductType | null; //Must have "?" to make it optional
@@ -50,15 +50,17 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
 
   const getCollections = async () => {
     try {
-      const res = await fetch("/api/collections", {
-        method: "GET",
+      setLoading(true);
+      const res = await fetch('/api/collections', {
+        method: 'GET',
+        //headers: {'Content-Type': 'application/json'}
       });
       const data = await res.json();
       setCollections(data);
-    
+
       setLoading(false);
-    } catch (err) {
-      console.log("[collections_GET]", err);
+    } catch (err: any) {
+      console.log("[collections_GET]", err.message);
       toast.error("Something went wrong! Please try again.");
     }
   };
@@ -126,13 +128,17 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
     <Loader />
   ) : (
     <div className="p-10">
+      
       {initialData ? (
         <div className="flex items-center justify-between">
           <p className="text-heading2-bold">Edit Product</p>
           <Delete id={initialData._id} item="product" />
         </div>
       ) : (
-        <p className="text-heading2-bold">Create Product</p>
+    
+      <p className="text-heading2-bold">Create Product</p>
+        
+
       )}
       <Separator className="bg-grey-1 mt-4 mb-7" />
       <Form {...form}>
@@ -271,7 +277,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
               )}
             />
             {/*////////////////////////////////////////////////////////////////////////////*/}
-            {collections.length > 0 && (
+            
               <FormField
                 control={form.control}
                 name="collections"
@@ -281,25 +287,21 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
                     <FormControl>
                       <MultiSelect
                         placeholder="Collections"
-                        collections={collections}
+                        collections={collections} 
                         value={field.value}
-                        onChange={(_id) =>
-                          field.onChange([...field.value, _id])
-                        }    
+                        onChange={(_id) => field.onChange([...field.value, _id])}
                         onRemove={(idToRemove) =>
-                          field.onChange([
-                            ...field.value.filter(
-                              (collectionId) => collectionId !== idToRemove
-                            ),
-                          ])
+                          field.onChange(
+                            ...field.value.filter((collectionId) => collectionId !== idToRemove)
+                          )
                         }
                       />
                     </FormControl>
-                    <FormMessage className="text-red-1" />
+                    <FormMessage/>
                   </FormItem>
                 )}
               />
-            )}
+            
             <FormField
               control={form.control}
               name="colors"

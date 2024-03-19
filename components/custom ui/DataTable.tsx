@@ -46,7 +46,7 @@ export function DataTable<TData, TValue>({
     state: {
       columnFilters,
     },
-  });
+  });  
 
   return (
     <div className="py-5">
