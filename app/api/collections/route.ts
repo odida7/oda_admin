@@ -52,7 +52,10 @@ export const GET = async (req: NextRequest) => {
       return NextResponse.json(collections, { status: 200 })
     } catch (err:any) {
       console.log("[collections_GET]", err.message)
-      return new NextResponse("Internal Server Error", { status: 500 })
+      return new NextResponse(err.message,
+      {
+        status: 500 
+      })
     }
   }
   

@@ -1,6 +1,5 @@
 "use client";
 
-import Collections from "@/app/(dashboard)/collections/page";
 import {
   Command,
   CommandDialog,
@@ -32,10 +31,8 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
   onChange,
   onRemove,
 }) => {
-  const [inputValue, setInputValue] = useState("");
+  const [inputValue, setInputValue] = useState('');
   const [open, setOpen] = useState(false);
-
-  
 
   return (
     <Command className="overflow-visible bg-white">
@@ -48,13 +45,13 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
       />
 
       <div className="relative mt-2">
-        {open && (
+        {open && collections && (
           <CommandGroup className="absolute w-full z-10 top-0 overflow-auto border rounded-md shadow-md">
-            {collections?.map((collection) => (
+            {collections.map((collection) => (
               <CommandItem 
-                key={collection._id}
+                key={collection?._id}
               >
-                {collection.title}
+                {collection?.title}
               </CommandItem>
             ))}
           </CommandGroup>
@@ -63,5 +60,6 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
     </Command>
   );
 };
+
 
 export default MultiSelect;

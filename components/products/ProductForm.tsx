@@ -18,12 +18,13 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "../ui/textarea";
 import ImageUpload from "../custom ui/ImageUpload";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import Delete from "../custom ui/Delete";
 import MultiText from "../custom ui/MultiText";
 import MultiSelect from "../custom ui/MultiSelect";
 import Loader from "../custom ui/Loader";
+
 
 const formSchema = z.object({
   title: z.string().min(2).max(20),
@@ -53,7 +54,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
       setLoading(true);
       const res = await fetch('/api/collections', {
         method: 'GET',
-        //headers: {'Content-Type': 'application/json'}
+        headers: {'Content-Type': 'application/json'}
       });
       const data = await res.json();
       setCollections(data);
