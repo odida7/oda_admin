@@ -1,17 +1,26 @@
-import React from "react";
+"use client";
+
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../ui/select";
+  Command,
+  CommandDialog,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+  CommandSeparator,
+  CommandShortcut,
+} from "@/components/ui/command";
+import { useState } from "react";
+//import { Badge } from "../ui/badge";
+//import { X } from "lucide-react";
 
 interface MultiSelectProps {
   placeholder: string;
   collections: CollectionType[];
   value: string[];
-  onChange: (value: string[]) => void;
+  onChange: (value: string) => void;
+  onRemove: (value: string) => void;
 }
 
 const MultiSelect: React.FC<MultiSelectProps> = ({
@@ -19,38 +28,41 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
   collections,
   value,
   onChange,
+  onRemove,
 }) => {
-  console.log('collections:', collections);
 
-  const handleSelectChange = (selectedItems: string[]) => {
-    onChange(selectedItems);
-  };
+  console.log('collections:', collections)
+  const [inputValue, setInputValue] = useState('');
+  const [open, setOpen] = useState(false);
+
+  console.log('value:', value)
 
   return (
-    <div className="overflow-visible bg-white">
-      <Select>
-        <SelectTrigger className="w-[180px]">
-          <SelectValue placeholder={placeholder} />
-        </SelectTrigger>
-        <SelectContent>
-          {collections.map(collection => (
-            <SelectItem 
-              key={collection._id} 
-              value={collection._id} 
-              isSelected={value.includes(collection._id)}
-              onClick={() => {
-                const selectedValues = value.includes(collection._id)
-                  ? value.filter(item => item !== collection._id)
-                  : [...value, collection._id];
-                handleSelectChange(selectedValues);
-              }}
-            >
-              {collection.title}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
-    </div>
+    <Command className="overflow-visible bg-white">
+      <CommandInput
+        placeholder={placeholder}
+        value={inputValue}
+        onValueChange={setInputValue}
+        onBlur={() => setOpen(false)}
+        onFocus={() => setOpen(true)}
+      />
+
+      <div className="relative mt-2">
+        {open && (
+          <CommandGroup className="absolute w-full z-10 top-0 overflow-auto border rounded-md shadow-md">
+            {collections.map((collection) => (
+              <CommandItem 
+                key={collection?._id}
+                onMouseDown={(e)=>{e.preventDefault()}}
+                onSelect={()=>{onChange(collection._id)}}
+              >
+                {collection.title}
+              </CommandItem>
+            ))}
+          </CommandGroup>
+        )}
+      </div>
+    </Command>
   );
 };
 

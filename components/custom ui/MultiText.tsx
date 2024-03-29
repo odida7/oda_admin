@@ -17,7 +17,7 @@ interface MultiTextProps {
 const MultiText: React.FC<MultiTextProps> = ({
   placeholder,
   value,
-  onChange,
+  onChange,  
   onRemove,
 }) => {
   const [inputValue, setInputValue] = useState("");

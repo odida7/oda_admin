@@ -295,7 +295,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
                           field.onChange(
                             ...field.value.filter((collectionId) => collectionId !== idToRemove)
                           )
-                        }
+                        } 
                       />
                     </FormControl>
                     <FormMessage/>
