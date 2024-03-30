@@ -1,5 +1,5 @@
 "use client";
-
+import React, { useEffect, useState } from "react";
 import {
   Command,
   CommandDialog,
@@ -10,15 +10,12 @@ import {
   CommandList,
   CommandSeparator,
   CommandShortcut,
-} from "@/components/ui/command";
-import { useState } from "react";
-//import { Badge } from "../ui/badge";
-//import { X } from "lucide-react";
+} from "@/components/ui/command"
 
 interface MultiSelectProps {
   placeholder: string;
   collections: CollectionType[];
-  value: string[];
+  value: string[] | undefined;
   onChange: (value: string) => void;
   onRemove: (value: string) => void;
 }
@@ -30,15 +27,41 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
   onChange,
   onRemove,
 }) => {
+  console.log("collections:", collections);
+  console.log("value:", value);
 
-  console.log('collections:', collections)
-  const [inputValue, setInputValue] = useState('');
+  const [inputValue, setInputValue] = useState("");
   const [open, setOpen] = useState(false);
 
-  console.log('value:', value)
+  useEffect(() => {
+    const down = (e: KeyboardEvent) => {
+      if (e.key === "j" && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault()
+        setOpen((open) => !open)
+      }
+    }
+ 
+    document.addEventListener("keydown", down)
+    return () => document.removeEventListener("keydown", down)
+  }, [])
+/*
+  const handleSelect = (collectionId: string) => {
+    onChange(collectionId);
+    setInputValue(""); 
+    setOpen(false); 
+  };
+
+const handleSelect = (collectionId: string) => {
+  const updatedValue: string[] = value ? [...value, collectionId] : [collectionId];
+  onChange(updatedValue);
+  setInputValue(""); // Clear input value after selection
+  setOpen(false); // Close the dropdown after selection
+};
+*/
 
   return (
-    <Command className="overflow-visible bg-white">
+    
+    <CommandDialog>
       <CommandInput
         placeholder={placeholder}
         value={inputValue}
@@ -46,23 +69,28 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
         onBlur={() => setOpen(false)}
         onFocus={() => setOpen(true)}
       />
-
-      <div className="relative mt-2">
-        {open && (
-          <CommandGroup className="absolute w-full z-10 top-0 overflow-auto border rounded-md shadow-md">
-            {collections.map((collection) => (
-              <CommandItem 
-                key={collection?._id}
-                onMouseDown={(e)=>{e.preventDefault()}}
-                onSelect={()=>{onChange(collection._id)}}
-              >
-                {collection.title}
-              </CommandItem>
-            ))}
-          </CommandGroup>
-        )}
-      </div>
-    </Command>
+      
+        <CommandList>
+          {collections.length === 0 && (
+            <CommandEmpty>No results found.</CommandEmpty>
+          )}
+          {collections.length > 0 && (
+            <CommandGroup >
+              {collections.map((collection) => (
+                <CommandItem
+                  className="text-gray-800"
+                  key={collection?._id}
+                  onMouseDown={(e) => e.preventDefault()}
+                  onSelect={() => onChange(collection._id)}
+                >
+                  {collection.title}
+                </CommandItem>
+              ))}
+            </CommandGroup>
+          )}
+        </CommandList>
+    
+    </CommandDialog>
   );
 };
 
