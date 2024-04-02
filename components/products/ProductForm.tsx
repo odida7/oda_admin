@@ -51,7 +51,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
 
   const getCollections = async () => {
     try {
-      setLoading(true);
+    
       const res = await fetch('/api/collections', {
         method: 'GET',
         headers: {'Content-Type': 'application/json'}
@@ -124,6 +124,11 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
       toast.error("Something went wrong! Please try again.");
     }
   };
+
+
+  console.log('initialData:', initialData)
+  console.log("collections:", collections);
+
 
   return loading ? (
     <Loader />
@@ -278,6 +283,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
               )}
             />
             {/*////////////////////////////////////////////////////////////////////////////*/}
+            {collections.length > 0 && (
             
               <FormField
                 control={form.control}
@@ -290,7 +296,9 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
                         placeholder="Collections"
                         collections={collections} 
                         value={field.value}
-                        onChange={(_id) => field.onChange([...field.value, _id])}
+                        onChange={(_id) =>
+                          field.onChange([...field.value, _id])
+                        }
                         onRemove={(idToRemove) =>
                           field.onChange(
                             ...field.value.filter((collectionId) => collectionId !== idToRemove)
@@ -298,10 +306,12 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
                         } 
                       />
                     </FormControl>
-                    <FormMessage/>
+                    <FormMessage className="text-red-1"/>
                   </FormItem>
                 )}
               />
+            )}
+
             
             <FormField
               control={form.control}

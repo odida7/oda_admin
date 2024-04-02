@@ -39,7 +39,7 @@ const MultiText: React.FC<MultiTextProps> = ({
             addValue(inputValue);
           }
         }}
-      />
+      /> 
 
       <div className="flex gap-1 flex-wrap mt-4">
         {value.map((item, index) => (

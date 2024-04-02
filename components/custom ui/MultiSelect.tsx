@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import {
   Select,
   SelectContent,
@@ -11,7 +11,7 @@ import {
 interface MultiSelectProps {
   placeholder: string;
   collections: CollectionType[];
-  value: string[] | undefined;
+  value: string[];
   onChange: (value: string) => void;
   onRemove: (value: string) => void;
 }
@@ -26,7 +26,6 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
   console.log("collections:", collections);
   console.log("value:", value);
 
-  const [inputValue, setInputValue] = useState("");
 
   return (
     <Select onValueChange={onChange}>
