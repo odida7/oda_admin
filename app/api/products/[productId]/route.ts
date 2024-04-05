@@ -135,7 +135,7 @@ export const POST = async (
 export const DELETE = async (
   req: NextRequest,
   { params }: { params: { productId: string } }
-) => {
+) => {  
   try {
     const { userId } = auth();
 
