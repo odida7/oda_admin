@@ -11,7 +11,7 @@ export const GET = async (req: NextRequest, { params }: { params: { query: strin
         { title: { $regex: params.query, $options: "i" } },
         { category: { $regex: params.query, $options: "i" } },
         { tags: { $in: [new RegExp(params.query, "i")] } } // $in is used to match an array of values
-      ]
+      ]  
     })
 
     return NextResponse.json(searchedProducts, { status: 200 })

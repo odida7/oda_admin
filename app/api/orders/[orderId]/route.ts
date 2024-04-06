@@ -12,7 +12,7 @@ export const GET = async (req: NextRequest, { params }: { params: { orderId: Str
       path: "products.product",
       model: Product
     })
-
+    
     if (!orderDetails) {
       return new NextResponse(JSON.stringify({ message: "Order Not Found" }), { status: 404 })
     }
